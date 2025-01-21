@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Heart, Activity, Rocket, Info } from 'lucide-react';
+import { useState} from 'react';
+import { Heart, Activity, Rocket } from 'lucide-react';
 import { MetricCard } from './MetricCard';
 import { HealthDashboard } from '../../health/HealthDashboard';
-import { Tooltip } from '../../ui/tooltip';
 import { useHealthAssessment } from '../../../hooks/useHealthAssessment';
 import { useSupabase } from '../../../contexts/SupabaseContext';
 

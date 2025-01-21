@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, ChevronRight, Target, AlertTriangle, Building2, Check } from 'lucide-react';
+import { Users, ChevronRight, AlertTriangle, Building2, Check } from 'lucide-react';
 import { useInviteCode } from '../../../hooks/useInviteCode';
 import { useSupabase } from '../../../contexts/SupabaseContext';
 import type { Community } from '../../../types/community';

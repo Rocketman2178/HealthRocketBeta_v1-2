@@ -1,5 +1,4 @@
-import React from 'react';
-import { Target, Users, ChevronDown, ChevronUp, Clock, Trophy, CheckCircle, Flame } from 'lucide-react';
+import { CheckCircle, Flame } from 'lucide-react';
 import type { StreakInfo } from '../../../types/dashboard';
 
 interface MilestoneInfo {

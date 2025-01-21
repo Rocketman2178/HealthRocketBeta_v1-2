@@ -1,30 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Trophy, Calendar, ChevronDown, ChevronUp, Heart, User, Activity, Zap, Users, Info, Star } from 'lucide-react';
-import { Card } from '../../ui/card';
-import { Tooltip } from '../../ui/tooltip';
-import { PlayerList } from './PlayerList';
-import { PlayerProfileModal } from './PlayerProfileModal';
-import { LeaderboardTooltip } from './LeaderboardTooltip';
-import { LeaderboardToggle } from './LeaderboardToggle';
-import { PrizePoolInfo } from './PrizePoolInfo';
-import type { LeaderboardEntry } from '../../../types/community';
-import { supabase } from '../../../lib/supabase';
-import { useCommunity } from '../../../hooks/useCommunity';
-import { useSupabase } from '../../../contexts/SupabaseContext';
+import { useState, useEffect } from "react";
+import {
+  Trophy,
+  ChevronDown,
+  ChevronUp,
+  Heart,
+  User,
+  Activity,
+  Zap,
+  Users,
+  Info,
+  Star,
+} from "lucide-react";
+import { Card } from "../../ui/card";
+import { Tooltip } from "../../ui/tooltip";
+import { PlayerList } from "./PlayerList";
+import { PlayerProfileModal } from "./PlayerProfileModal";
+import { LeaderboardTooltip } from "./LeaderboardTooltip";
+import { LeaderboardToggle } from "./LeaderboardToggle";
+import { PrizePoolInfo } from "./PrizePoolInfo";
+import type { LeaderboardEntry } from "../../../types/community";
+import { supabase } from "../../../lib/supabase";
+import { useCommunity } from "../../../hooks/useCommunity";
+import { useSupabase } from "../../../contexts/SupabaseContext";
 
 interface CommunityLeaderboardProps {
   communityId: string;
   userId?: string;
 }
 
-type TimeFrame = 'month' | 'quarter' | 'year';
+type TimeFrame = "month" | "quarter" | "year";
 
-export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboardProps) {
+export function CommunityLeaderboard({
+  communityId,
+  userId,
+}: CommunityLeaderboardProps) {
   const { user } = useSupabase();
-  const { primaryCommunity, allCommunities, loading: communityLoading } = useCommunity(user?.id);
+  const {
+    primaryCommunity,
+    allCommunities,
+    loading: communityLoading,
+  } = useCommunity(user?.id);
   const [isGlobal, setIsGlobal] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<LeaderboardEntry | null>(null);
-  const [timeframe, setTimeframe] = useState<TimeFrame>('month');
+  const [selectedPlayer, setSelectedPlayer] = useState<LeaderboardEntry | null>(
+    null
+  );
+  const [timeframe, setTimeframe] = useState<TimeFrame>("month");
   const [showPlayerList, setShowPlayerList] = useState(false);
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [userRank, setUserRank] = useState<LeaderboardEntry | null>(null);
@@ -41,27 +61,27 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
         setShowCommunitySelector(false);
       }
     } catch (err) {
-      console.error('Failed to update primary community:', err);
+      console.error("Failed to update primary community:", err);
     }
   };
 
   // Get start date based on timeframe
   const getStartDate = () => {
     const date = new Date();
-    
+
     switch (timeframe) {
-      case 'month':
+      case "month":
         date.setDate(1);
         break;
-      case 'quarter':
+      case "quarter":
         const quarter = Math.floor(date.getMonth() / 3);
         date.setMonth(quarter * 3, 1);
         break;
-      case 'year':
+      case "year":
         date.setMonth(0, 1);
         break;
     }
-    
+
     date.setHours(0, 0, 0, 0);
     return date.toISOString();
   };
@@ -70,25 +90,25 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
     async function fetchLeaderboard() {
       try {
         // Don't fetch if no valid communityId
-        if (!isGlobal && (!communityId || communityId === '')) {
+        if (!isGlobal && (!communityId || communityId === "")) {
           setEntries([]);
           setUserRank(null);
           setLoading(false);
           return;
         }
 
-        const { data, error } = isGlobal 
-          ? await supabase.rpc('get_global_leaderboard', {
-              p_start_date: getStartDate()
+        const { data, error } = isGlobal
+          ? await supabase.rpc("get_global_leaderboard", {
+              p_start_date: getStartDate(),
             })
-          : await supabase.rpc('get_community_leaderboard', {
+          : await supabase.rpc("get_community_leaderboard", {
               p_community_id: communityId,
-              p_start_date: getStartDate()
+              p_start_date: getStartDate(),
             });
 
         if (error) throw error;
 
-        const mappedEntries: LeaderboardEntry[] = data.map(row => ({
+        const mappedEntries: LeaderboardEntry[] = data.map((row) => ({
           userId: row.user_id,
           name: row.name,
           createdAt: row.created_at,
@@ -100,23 +120,31 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
           avatarUrl: row.avatar_url,
           healthScore: Number(row.health_score),
           healthspanYears: Number(row.healthspan_years),
-          plan: row.plan
+          plan: row.plan,
         }));
 
         setEntries(mappedEntries);
 
         // Set user's rank if they're in the list
-        const userEntry = mappedEntries.find(entry => entry.userId === userId);
+        const userEntry = mappedEntries.find(
+          (entry) => entry.userId === userId
+        );
         setUserRank(userEntry || null);
-
       } catch (err) {
-        console.error('Error fetching leaderboard:', err);
+        console.error("Error fetching leaderboard:", err);
       } finally {
         setLoading(false);
       }
     }
 
     fetchLeaderboard();
+    const handleUpdate = (event: Event) => {
+      if (event.type === "dashboardUpdate") {
+        fetchLeaderboard();
+      }
+    };
+    window.addEventListener("dashboardUpdate", handleUpdate);
+    return () => window.removeEventListener("dashboardUpdate", handleUpdate);
   }, [communityId, timeframe, userId, isGlobal]);
 
   if (loading || communityLoading) {
@@ -129,7 +157,7 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
       </Card>
     );
   }
-  
+
   // Show message if no community is selected
   if (!communityId || !primaryCommunity) {
     return (
@@ -138,9 +166,13 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
           <div className="flex flex-col items-center justify-center py-2.5 space-y-1.5">
             <div className="flex items-center gap-2">
               <Trophy className="text-orange-500" size={24} />
-              <h3 className="text-lg font-medium text-white">Select Your Community</h3>
+              <h3 className="text-lg font-medium text-white">
+                Select Your Community
+              </h3>
             </div>
-            <div className="text-sm text-gray-400">Join a community to see stats and leaderboards</div>
+            <div className="text-sm text-gray-400">
+              Join a community to see stats and leaderboards
+            </div>
           </div>
         </div>
       </Card>
@@ -152,7 +184,7 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
       {/* Top Controls */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <LeaderboardToggle 
+          <LeaderboardToggle
             isGlobal={isGlobal}
             onToggle={() => {
               setIsGlobal(!isGlobal);
@@ -171,13 +203,19 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
         <div className="flex items-center gap-3">
           <div className="relative">
             <button
-              onClick={() => !isGlobal && setShowCommunitySelector(prev => !prev)}
+              onClick={() =>
+                !isGlobal && setShowCommunitySelector((prev) => !prev)
+              }
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors ${
-                isGlobal ? 'bg-gray-700/50 text-gray-400' : 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'
+                isGlobal
+                  ? "bg-gray-700/50 text-gray-400"
+                  : "bg-orange-500/10 text-orange-500 hover:bg-orange-500/20"
               }`}
               disabled={isGlobal}
             >
-              <span className="text-xs font-medium">{primaryCommunity?.name || 'Loading...'}</span>
+              <span className="text-xs font-medium">
+                {primaryCommunity?.name || "Loading..."}
+              </span>
               <ChevronDown size={16} />
             </button>
 
@@ -189,7 +227,9 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
                     className="p-3 hover:bg-gray-700/50 flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="text-white text-sm">{community.name}</span>
+                      <span className="text-white text-sm">
+                        {community.name}
+                      </span>
                       {community.isPrimary && (
                         <Star size={12} className="text-orange-500" />
                       )}
@@ -209,7 +249,7 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
           </div>
           <div className="flex items-center gap-2 text-xs text-gray-400">
             <Users size={16} />
-            <button 
+            <button
               onClick={(e) => {
                 e.stopPropagation();
                 setShowPlayerList(true);
@@ -230,38 +270,51 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
                 <div className="flex flex-col items-center">
-                  <span className="text-3xl font-bold text-white">#{userRank.rank}</span>
-                  <span className="text-xs text-gray-400">{userRank.rank}/{entries.length}</span>
+                  <span className="text-3xl font-bold text-white">
+                    #{userRank.rank}
+                  </span>
+                  <span className="text-xs text-gray-400">
+                    {userRank.rank}/{entries.length}
+                  </span>
                 </div>
                 <div className="h-12 w-px bg-gray-700/50" />
                 <div className="flex flex-col">
                   <span className="text-xs text-gray-400 mb-1">Status</span>
-                  <div className={`px-3 py-1 rounded-md text-xs font-medium inline-flex items-center gap-1.5 ${
-                    userRank.rank <= Math.ceil(entries.length * 0.1) ? 'bg-orange-500/20 text-orange-500' : 
-                    userRank.rank <= Math.ceil(entries.length * 0.5) ? 'bg-lime-500/20 text-lime-500' : 
-                    'bg-gray-700/50 text-gray-400'
-                  }`}>
+                  <div
+                    className={`px-3 py-1 rounded-md text-xs font-medium inline-flex items-center gap-1.5 ${
+                      userRank.rank <= Math.ceil(entries.length * 0.1)
+                        ? "bg-orange-500/20 text-orange-500"
+                        : userRank.rank <= Math.ceil(entries.length * 0.5)
+                        ? "bg-lime-500/20 text-lime-500"
+                        : "bg-gray-700/50 text-gray-400"
+                    }`}
+                  >
                     <Trophy size={12} />
                     <span>
-                      {userRank.rank <= Math.ceil(entries.length * 0.1) ? 'Legend' :
-                       userRank.rank <= Math.ceil(entries.length * 0.5)
-                         ? 'Hero'
-                         : 'Commander'} 
+                      {userRank.rank <= Math.ceil(entries.length * 0.1)
+                        ? "Legend"
+                        : userRank.rank <= Math.ceil(entries.length * 0.5)
+                        ? "Hero"
+                        : "Commander"}
                     </span>
                   </div>
-                  <span className="text-[10px] text-gray-400 mt-1">Resets Monthly</span>
+                  <span className="text-[10px] text-gray-400 mt-1">
+                    Resets Monthly
+                  </span>
                 </div>
                 <div className="h-12 w-px bg-gray-700/50" />
                 <div className="flex flex-col items-end">
                   <div className="flex flex-col items-center">
                     <Zap size={16} className="text-orange-500" />
-                    <span className="text-2xl font-bold text-white">{userRank.fuelPoints.toLocaleString()}</span>
+                    <span className="text-2xl font-bold text-white">
+                      {userRank.fuelPoints.toLocaleString()}
+                    </span>
                     <span className="text-xs text-gray-400">FP</span>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             {/* Progress Bars */}
             <div className="space-y-3 mt-4 pt-4 border-t border-gray-700/50">
               {/* Hero Progress */}
@@ -272,18 +325,42 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
                       <Trophy size={12} className="text-lime-500" />
                       <span className="text-lime-500">Hero Status</span>
                     </div>
-                    <span className="text-[10px] text-lime-500 bg-lime-500/10 px-1.5 py-0.5 rounded">2X Prize Pool</span>
+                    <span className="text-[10px] text-lime-500 bg-lime-500/10 px-1.5 py-0.5 rounded">
+                      2X Prize Pool
+                    </span>
                   </div>
-                  <span className="text-gray-400">{Math.round(Math.min(100, (userRank.rank <= Math.ceil(entries.length * 0.5) ? 100 : (Math.ceil(entries.length * 0.5) / userRank.rank * 100))))}%</span>
+                  <span className="text-gray-400">
+                    {Math.round(
+                      Math.min(
+                        100,
+                        userRank.rank <= Math.ceil(entries.length * 0.5)
+                          ? 100
+                          : (Math.ceil(entries.length * 0.5) / userRank.rank) *
+                              100
+                      )
+                    )}
+                    %
+                  </span>
                 </div>
                 <div className="h-1.5 bg-gray-700 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-lime-500 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.round(Math.min(100, (userRank.rank <= Math.ceil(entries.length * 0.5) ? 100 : (Math.ceil(entries.length * 0.5) / userRank.rank * 100))))}%` }}
+                    style={{
+                      width: `${Math.round(
+                        Math.min(
+                          100,
+                          userRank.rank <= Math.ceil(entries.length * 0.5)
+                            ? 100
+                            : (Math.ceil(entries.length * 0.5) /
+                                userRank.rank) *
+                                100
+                        )
+                      )}%`,
+                    }}
                   />
                 </div>
               </div>
-              
+
               {/* Legend Progress */}
               <div>
                 <div className="flex justify-between items-center text-xs mb-1">
@@ -292,14 +369,38 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
                       <Trophy size={12} className="text-orange-500" />
                       <span className="text-orange-500">Legend Status</span>
                     </div>
-                    <span className="text-[10px] text-orange-500 bg-orange-500/10 px-1.5 py-0.5 rounded">5X Prize Pool</span>
+                    <span className="text-[10px] text-orange-500 bg-orange-500/10 px-1.5 py-0.5 rounded">
+                      5X Prize Pool
+                    </span>
                   </div>
-                  <span className="text-gray-400">{Math.round(Math.min(100, (userRank.rank <= Math.ceil(entries.length * 0.1) ? 100 : (Math.ceil(entries.length * 0.1) / userRank.rank * 100))))}%</span>
+                  <span className="text-gray-400">
+                    {Math.round(
+                      Math.min(
+                        100,
+                        userRank.rank <= Math.ceil(entries.length * 0.1)
+                          ? 100
+                          : (Math.ceil(entries.length * 0.1) / userRank.rank) *
+                              100
+                      )
+                    )}
+                    %
+                  </span>
                 </div>
                 <div className="h-1.5 bg-gray-700 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-orange-500 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.round(Math.min(100, (userRank.rank <= Math.ceil(entries.length * 0.1) ? 100 : (Math.ceil(entries.length * 0.1) / userRank.rank * 100))))}%` }}
+                    style={{
+                      width: `${Math.round(
+                        Math.min(
+                          100,
+                          userRank.rank <= Math.ceil(entries.length * 0.1)
+                            ? 100
+                            : (Math.ceil(entries.length * 0.1) /
+                                userRank.rank) *
+                                100
+                        )
+                      )}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -334,7 +435,11 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
             onClick={() => setSelectedPlayer(entry)}
             key={entry.userId}
             className={`flex items-center justify-between p-2 rounded-lg cursor-pointer ${
-              entry.userId === userId ? 'bg-orange-500/10' : entry.rank % 2 === 0 ? 'bg-gray-700/10' : ''
+              entry.userId === userId
+                ? "bg-orange-500/10"
+                : entry.rank % 2 === 0
+                ? "bg-gray-700/10"
+                : ""
             }`}
           >
             <div className="flex items-center gap-2">
@@ -342,7 +447,11 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
                 #{entry.rank}
               </div>
               {entry.avatarUrl ? (
-                <img src={entry.avatarUrl} alt="" className="w-8 h-8 rounded-full shrink-0" />
+                <img
+                  src={entry.avatarUrl}
+                  alt=""
+                  className="w-8 h-8 rounded-full shrink-0"
+                />
               ) : (
                 <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center shrink-0">
                   <User size={16} className="text-gray-400" />
@@ -350,16 +459,20 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
               )}
               <div className="flex flex-col justify-between flex-1 gap-1">
                 <div className="flex items-center justify-between">
-                  <div className="text-white text-sm font-medium">{entry.name}</div>
-                  <div className="text-gray-400 text-xs text-right ml-2">Level {entry.level}</div>
+                  <div className="text-white text-sm font-medium">
+                    {entry.name}
+                  </div>
+                  <div className="text-gray-400 text-xs text-right ml-2">
+                    Level {entry.level}
+                  </div>
                 </div>
                 <div className="flex items-center gap-0.5">
                   <span className="text-xs text-orange-500 min-w-[80px]">
-                    {entry.rank <= Math.ceil(entries.length * 0.1) 
-                      ? 'Legend' 
+                    {entry.rank <= Math.ceil(entries.length * 0.1)
+                      ? "Legend"
                       : entry.rank <= Math.ceil(entries.length * 0.5)
-                        ? 'Hero'
-                        : 'Commander'}
+                      ? "Hero"
+                      : "Commander"}
                   </span>
                   <div className="flex items-center">
                     <div className="flex items-center gap-0.5 px-1 py-0.5 bg-gray-700/50 rounded text-xs w-[40px] justify-end">
@@ -369,7 +482,7 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
                     <div className="flex items-center gap-0.5 px-1 py-0.5 bg-lime-500/10 rounded text-xs w-[60px] justify-end">
                       <Heart size={12} />
                       <span>+{entry.healthspanYears}</span>
-                    </div> 
+                    </div>
                     <div className="flex items-center gap-0.5 px-1 py-0.5 bg-orange-500/10 rounded text-xs w-[60px] justify-end">
                       <Zap size={12} className="text-orange-500" />
                       <span>{entry.fuelPoints}</span>
@@ -388,7 +501,7 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
           onClick={() => setExpanded(!expanded)}
           className="w-full flex items-center justify-center gap-1 text-sm text-orange-500 hover:text-orange-400 py-2"
         >
-          <span>{expanded ? 'Show Less' : 'View More'}</span>
+          <span>{expanded ? "Show Less" : "View More"}</span>
           {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </button>
       )}
@@ -396,12 +509,16 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
       {/* Expanded List */}
       {expanded && (
         <div className="space-y-2 mt-4 max-h-96 overflow-y-auto">
-          {entries.slice(3).map(entry => (
+          {entries.slice(3).map((entry) => (
             <button
               onClick={() => setSelectedPlayer(entry)}
               key={entry.userId}
               className={`w-full flex items-center justify-between p-2 rounded-lg cursor-pointer ${
-                entry.userId === userId ? 'bg-orange-500/10' : entry.rank % 2 === 0 ? 'bg-gray-700/10' : ''
+                entry.userId === userId
+                  ? "bg-orange-500/10"
+                  : entry.rank % 2 === 0
+                  ? "bg-gray-700/10"
+                  : ""
               }`}
             >
               <div className="flex items-center gap-2">
@@ -409,7 +526,11 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
                   #{entry.rank}
                 </div>
                 {entry.avatarUrl ? (
-                  <img src={entry.avatarUrl} alt="" className="w-8 h-8 rounded-full shrink-0" />
+                  <img
+                    src={entry.avatarUrl}
+                    alt=""
+                    className="w-8 h-8 rounded-full shrink-0"
+                  />
                 ) : (
                   <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center shrink-0">
                     <User size={16} className="text-gray-400" />
@@ -417,14 +538,20 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
                 )}
                 <div className="flex flex-col justify-between flex-1 gap-1">
                   <div className="flex items-center justify-between">
-                    <div className="text-white text-sm font-medium">{entry.name}</div>
-                    <div className="text-gray-400 text-xs text-right ml-2">Level {entry.level}</div>
+                    <div className="text-white text-sm font-medium">
+                      {entry.name}
+                    </div>
+                    <div className="text-gray-400 text-xs text-right ml-2">
+                      Level {entry.level}
+                    </div>
                   </div>
                   <div className="flex items-center gap-0.5">
                     <span className="text-xs text-orange-500 min-w-[80px]">
-                      {entry.rank <= Math.ceil(entries.length * 0.1) ? 'Legend' :
-                       entry.rank <= Math.ceil(entries.length * 0.5) ? 'Hero' :
-                       'Commander'}
+                      {entry.rank <= Math.ceil(entries.length * 0.1)
+                        ? "Legend"
+                        : entry.rank <= Math.ceil(entries.length * 0.5)
+                        ? "Hero"
+                        : "Commander"}
                     </span>
                     <div className="flex items-center">
                       <div className="flex items-center gap-0.5 px-1 py-0.5 bg-gray-700/50 rounded text-xs w-[40px] justify-end">
@@ -434,7 +561,7 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
                       <div className="flex items-center gap-0.5 px-1 py-0.5 bg-lime-500/10 rounded text-xs w-[60px] justify-end">
                         <Heart size={12} />
                         <span>+{entry.healthspanYears}</span>
-                      </div> 
+                      </div>
                       <div className="flex items-center gap-0.5 px-1 py-0.5 bg-orange-500/10 rounded text-xs w-[60px] justify-end">
                         <Zap size={12} className="text-orange-500" />
                         <span>{entry.fuelPoints}</span>
@@ -447,7 +574,7 @@ export function CommunityLeaderboard({ communityId, userId }: CommunityLeaderboa
           ))}
         </div>
       )}
-      
+
       {selectedPlayer && (
         <PlayerProfileModal
           player={selectedPlayer}

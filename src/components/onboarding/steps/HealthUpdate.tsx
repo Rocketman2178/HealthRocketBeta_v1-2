@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { useSupabase } from '../../../contexts/SupabaseContext';
 import { calculateHealthScore } from '../../../lib/health/calculators/score';

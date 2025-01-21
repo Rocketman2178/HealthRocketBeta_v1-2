@@ -1,4 +1,3 @@
-import React from 'react';
 import { Users, DollarSign, TrendingUp, Activity } from 'lucide-react';
 import { StatsCard } from './StatsCard';
 import { formatCurrency } from '../../../lib/utils';

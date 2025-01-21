@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { LucideIcon, Info, ChevronDown, ChevronUp } from 'lucide-react';
 import { BoostItem } from './BoostItem';
 import { boostCategories } from '../../../data/boostCategories'; 

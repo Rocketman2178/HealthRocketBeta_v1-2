@@ -1,4 +1,3 @@
-import React from 'react';
 import { cn } from '../../lib/utils';
 import { RocketBase } from './parts/RocketBase';
 import { RocketEffects } from './parts/RocketEffects';

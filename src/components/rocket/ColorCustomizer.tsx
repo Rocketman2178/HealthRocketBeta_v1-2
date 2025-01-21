@@ -1,4 +1,3 @@
-import React from 'react';
 import { Paintbrush } from 'lucide-react';
 import type { RocketColors } from '../../types/rocket';
 

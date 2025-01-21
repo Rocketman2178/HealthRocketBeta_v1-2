@@ -1,6 +1,4 @@
-import React from 'react';
 import { Award, Calendar, Target } from 'lucide-react';
-import { challenges } from '../../../data';
 
 interface CompletedChallenge {
   id: string;

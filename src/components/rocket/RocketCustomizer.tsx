@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Rocket, X } from 'lucide-react';
 import { RocketDisplay } from './RocketDisplay';
 import { ColorCustomizer } from './ColorCustomizer';

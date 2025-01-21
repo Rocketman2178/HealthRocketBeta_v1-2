@@ -1,6 +1,4 @@
-import React from 'react';
 import { X, Check } from 'lucide-react';
-
 interface RocketCustomizerProps {
   onClose: () => void;
 }

@@ -1,4 +1,3 @@
-import React from 'react';
 import { cn } from '../../../lib/utils';
 import type { RocketColors, RocketDesign } from '../../../types/rocket';
 
@@ -9,7 +8,7 @@ interface RocketBaseProps {
   className?: string;
 }
 
-export function RocketBase({ colors, design, level, className }: RocketBaseProps) {
+export function RocketBase({ colors, className }: RocketBaseProps) {
   return (
     <svg
       viewBox="241.832 93.613 181 254"

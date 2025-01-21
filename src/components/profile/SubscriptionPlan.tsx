@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Shield, ChevronDown, ChevronUp, Users, Building2, Rocket, Gift, CreditCard, X } from 'lucide-react';
 
 export function SubscriptionPlan({ onOpenChange }: SubscriptionPlanProps) {

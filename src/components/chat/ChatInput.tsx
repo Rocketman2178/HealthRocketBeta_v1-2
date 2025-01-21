@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { Send, Image as ImageIcon, X, Check } from 'lucide-react';
-import type { ChatMessage } from '../../types/chat';
 
 interface ChatInputProps {
   onSend: (content: string, mediaFile?: File) => void;

@@ -1,6 +1,4 @@
-import React from 'react';
 import { Users, Globe } from 'lucide-react';
-
 interface LeaderboardToggleProps {
   isGlobal: boolean;
   onToggle: () => void;

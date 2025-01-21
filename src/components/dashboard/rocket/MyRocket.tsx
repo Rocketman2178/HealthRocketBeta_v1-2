@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Rocket, Maximize2, Zap, ArrowUpCircle, Info, Palette, Sparkles, Target, X, Star, Crown, Gem, Gift, Medal, Trophy } from 'lucide-react';
+import { useState } from 'react';
+import { Rocket, Maximize2, Zap, ArrowUpCircle, Info, Palette, Sparkles, Target, X,  Crown,  Gift,  Trophy } from 'lucide-react';
 import { Card } from '../../ui/card';
 import { Progress } from '../../ui/progress';
 import { RocketCustomizer } from '../../rocket/RocketCustomizer';
 import { RocketDisplay } from '../../rocket/RocketDisplay';
-import { Tooltip } from '../../ui/tooltip';
 import { useSupabase } from '../../../contexts/SupabaseContext';
 import { usePlayerStats } from '../../../hooks/usePlayerStats';
 import type { RocketConfig } from '../../../types/rocket';

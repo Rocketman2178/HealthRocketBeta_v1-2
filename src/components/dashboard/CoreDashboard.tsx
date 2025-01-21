@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import {  useEffect } from 'react';
 import { CompanyLogo } from './header/CompanyLogo';
 import { DashboardHeader } from './header/DashboardHeader';
 import { MyRocket } from './rocket/MyRocket';
@@ -10,11 +10,6 @@ import { useSupabase } from '../../contexts/SupabaseContext';
 import { useDashboardData } from '../../hooks/useDashboardData';
 import { usePlayerStats } from '../../hooks/usePlayerStats';
 import { useBoostState } from '../../hooks/useBoostState';
-import { supabase } from '../../lib/supabase';
-
-interface DashboardUpdateEvent extends Event {
-  type: 'dashboardUpdate';
-}
 
 export function CoreDashboard() {
   const { user } = useSupabase();
@@ -85,7 +80,7 @@ export function CoreDashboard() {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-white">Player Standings</h2>
           </div>
-          <RankStatus rankProgress={data.rankProgress} />
+          <RankStatus />
         </div>
         <div id="quests">
           <QuestCard

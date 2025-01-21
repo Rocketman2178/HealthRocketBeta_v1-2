@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { User, Search, X, Trophy, Users, Building2 } from 'lucide-react';
-import { ModalContainer } from '../ui/modal-container';
 import { PlayerProfileModal } from '../dashboard/rank/PlayerProfileModal';
 import type { LeaderboardEntry } from '../../types/community';
 

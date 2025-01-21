@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { X, Target, Award, Calendar } from 'lucide-react';
 import { useCompletedActivities } from '../../../hooks/useCompletedActivities';
 import { challenges } from '../../../data';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Check, Image as ImageIcon, Trash2, Trophy } from 'lucide-react';
+import { User, Check, Image as ImageIcon, Trash2 } from 'lucide-react';
 import { useSupabase } from '../../contexts/SupabaseContext';
 import { PlayerProfileModal } from '../dashboard/rank/PlayerProfileModal';
 import { useUser } from '../../hooks/useUser';

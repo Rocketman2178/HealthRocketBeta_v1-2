@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Award, Zap, ChevronDown, ChevronUp, Brain, Moon, Activity, Apple, Database, Clock, CheckCircle2, Calendar, Target } from 'lucide-react';
+import { X, Award, Zap, ChevronDown, Brain, Moon, Activity, Apple, Database, Target } from 'lucide-react';
 import { ChallengeDetails } from './ChallengeDetails';
 import { challenges } from '../../../data';
 import type { Challenge } from '../../../types/dashboard';

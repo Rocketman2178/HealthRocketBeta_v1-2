@@ -1,5 +1,4 @@
-import React from 'react';
-import { X, Award, Zap, Clock, CheckCircle2, Target, Brain, Calendar, Moon, Activity, Apple, Database } from 'lucide-react';
+import { X, Award, Zap, Clock, Brain, Moon, Activity, Apple, Database } from 'lucide-react';
 import { getChatPath } from '../../../lib/utils/chat';
 import type { Challenge } from '../../../types/dashboard';
 

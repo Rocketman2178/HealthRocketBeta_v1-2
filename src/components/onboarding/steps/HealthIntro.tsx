@@ -1,6 +1,4 @@
-import React from 'react';
 import { Activity, ArrowRight } from 'lucide-react';
-import { Logo } from '../../ui/logo';
 
 interface HealthIntroProps {
   onContinue: () => void;

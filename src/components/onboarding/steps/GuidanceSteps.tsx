@@ -1,4 +1,3 @@
-import React from 'react';
 import { Rocket, Heart, Award, Target, Zap, Brain, Moon, Activity, Apple, Database, Check } from 'lucide-react';
 
 interface GuidanceStepProps {

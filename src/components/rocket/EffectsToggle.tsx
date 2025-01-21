@@ -1,5 +1,4 @@
-import React from 'react';
-import { Sparkles, Flame, Star, Cloud } from 'lucide-react';
+import { Sparkles, Flame, Star } from 'lucide-react';
 import type { RocketEffects } from '../../types/rocket';
 
 interface EffectsToggleProps {

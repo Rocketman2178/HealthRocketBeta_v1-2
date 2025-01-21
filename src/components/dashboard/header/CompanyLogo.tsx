@@ -1,4 +1,3 @@
-import React from 'react';
 import { ProfileAvatar } from './ProfileAvatar';
 import { useSupabase } from '../../../contexts/SupabaseContext';
 import { useUser } from '../../../hooks/useUser';

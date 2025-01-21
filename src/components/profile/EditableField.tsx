@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Edit2, Check, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 

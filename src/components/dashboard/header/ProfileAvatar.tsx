@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { User } from 'lucide-react';
 import { PlayerProfile } from '../../profile/PlayerProfile';
 import { useSupabase } from '../../../contexts/SupabaseContext';

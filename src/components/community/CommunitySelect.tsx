@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Target, Users, ChevronRight } from 'lucide-react';
 import { Card } from '../ui/card';
 import { useInviteCode } from '../../hooks/useInviteCode';

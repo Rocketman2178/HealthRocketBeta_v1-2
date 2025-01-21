@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useSupabase } from '../../contexts/SupabaseContext';
 import { OnboardingService } from '../../lib/onboarding/OnboardingService';
 import { MissionIntro } from './steps/MissionIntro';
@@ -13,8 +12,7 @@ type OnboardingStep = 'mission' | 'community' | 'health-intro' | 'health-assessm
 
 export function OnboardingFlow() {
   const [step, setStep] = React.useState<OnboardingStep>('mission');
-  const { user, signOut } = useSupabase();
-  const navigate = useNavigate();
+  const { user } = useSupabase();
   const [isNavigating, setIsNavigating] = React.useState(false); 
 
   const handleLaunch = async () => {

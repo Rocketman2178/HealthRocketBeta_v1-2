@@ -1,4 +1,3 @@
-import React from 'react';
 import { Award, Star } from 'lucide-react';
 import { Progress } from '../../ui/progress';
 

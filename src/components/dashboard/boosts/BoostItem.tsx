@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Lock, Info, X, Plus } from 'lucide-react';
+import { Check, Lock, X, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 interface BoostItemProps {

@@ -1,7 +1,6 @@
 import { supabase } from '../lib/supabase/client';
 import { useState, useEffect } from 'react';
 import type { Database } from '../types/supabase';
-import { EmptyResultError } from '../lib/errors';
 
 type User = Database['public']['Tables']['users']['Row'];
 

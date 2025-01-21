@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Award, ChevronRight, Clock, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { Award, Clock, Zap } from 'lucide-react';
 import { Card } from '../../ui/card';
 import { challenges } from '../../../data';
 import { ChallengeDetails } from './ChallengeDetails';

@@ -1,6 +1,4 @@
-import React from 'react';
 import { Rocket, Heart, Award, ArrowRight, Trophy } from 'lucide-react';
-import { Logo } from '../../ui/logo';
 
 interface MissionIntroProps {
   onAccept: () => void;

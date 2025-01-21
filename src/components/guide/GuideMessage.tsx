@@ -1,4 +1,3 @@
-import React from 'react';
 import { TopicTags } from './TopicTags';
 import { cn } from '../../lib/utils';
 import { ChevronLeft } from 'lucide-react';

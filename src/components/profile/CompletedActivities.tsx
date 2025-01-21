@@ -1,4 +1,3 @@
-import React from 'react';
 import { Award, Target, Calendar, Trophy } from 'lucide-react';
 import { Card } from '../ui/card';
 import { useCompletedActivities } from '../../hooks/useCompletedActivities';

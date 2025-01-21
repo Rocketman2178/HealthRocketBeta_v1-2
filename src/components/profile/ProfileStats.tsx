@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Activity, Zap, Target, Trophy } from 'lucide-react';
 import { Card } from '../ui/card';
 import { useCompletedActivities } from '../../hooks/useCompletedActivities';

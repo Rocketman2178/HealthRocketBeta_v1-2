@@ -1,4 +1,3 @@
-import React from 'react';
 import { Trophy, Award, Gift } from 'lucide-react';
 
 export function LeaderboardTooltip() {
